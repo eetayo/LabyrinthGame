@@ -1,0 +1,13 @@
+1,8
+3,3
+3,6
+4,2
+4,4
+6,4
+7,7
+7,9
+9,7
+FINACTIVAR
+pelotaA,7,1
+pelotaB,9,2
+FIN

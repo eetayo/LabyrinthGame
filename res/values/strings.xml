@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, MainActivity!</string>
+    <string name="app_name">LabyrinthGame</string>
+    
+    <string name="botonMenu_inicio">Inicio</string>
+    <string name="botonMenu_comoJugar">Como Jugar</string>
+    <string name="botonMenu_Opciones">Opciones</string>
+    <string name="botonMenu_Salir">Salir</string>
+    
+     <!-- Seleccion del Mundo -->
+    <string name="botonElegirMundo">Mundo</string>
+    
+     <!-- Partes del juego -->
+    <string name="botonOpciones_pulsadores_ON">Ayuda : ON</string>
+    <string name="botonOpciones_pulsadores_OFF">Ayuda : OFF</string>
+    <string name="botonOpciones_sonidos_ON">Sonidos : ON</string>
+    <string name="botonOpciones_sonidos_OFF">Sonidos : OFF</string>
+    <string name="botonOpciones_musica_ON">Musica : ON</string>
+    <string name="botonOpciones_musica_OFF">Musica : OFF</string>
+    <string name="botonOpciones_creditos">Creditos</string>
+    <string name="botonOpciones_resetGame">Resetear Juego</string>
+    <string name="botonOpciones_Volver">Volver</string>
+    <string name="botonOpciones_reiniciar">Reiniciar</string>
+    <string name="botonOpciones_salir">Salir</string>
+    <string name="botonOpciones_continuar">Continuar</string>
+    <string name="botonOpciones_siguiente">Continuar</string>
+    <string name="botonOpciones_opciones">Opciones</string>
+    <string name="botonOpciones_seleccionar_nivel">Seleccionar nivel</string>
+    <string name="botonOpciones_menu_principal">Menu principal</string>
+    
+    <string name="btnCargarNivel">Cargar Nivel</string>
+    
+    <!-- Partes del juego -->
+     <string name="txtMarcador_numMovimientos">Movimientos : </string>
+     <string name="txtMarcador_numMovimientosMinimos">Record : </string>
+    
+</resources>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/menu_opciones"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="10dp">
+   <LinearLayout android:orientation="vertical"
+		android:padding="5dp"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">    
+            <LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="120dp">
+				<Button android:text="@string/botonOpciones_Volver" 
+       			android:id="@+id/btnVolver" android:layout_width="wrap_content" android:layout_height="70dp" android:width="300dp"
+           		android:background="@drawable/botones_gr3_off"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
+       			
+				<Button android:text="@string/botonOpciones_sonidos_ON" android:id="@+id/btnSonidos"
+				android:layout_width="wrap_content" 
+				android:layout_height="70dp" android:width="300dp" 
+				android:background="@drawable/botones_gr_off"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
+        
+				<Button android:layout_marginTop="5dp" android:width="300dp" 
+				android:text="@string/botonOpciones_musica_ON" android:layout_height="70dp" 
+				android:id="@+id/btnMusica" android:layout_width="wrap_content"
+				android:background="@drawable/botones_gr_off"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
+       			
+           		<Button android:layout_marginTop="5dp" android:text="@string/botonOpciones_creditos" 
+           		android:id="@+id/btnCreditos" android:layout_width="wrap_content" android:layout_height="70dp" android:width="300dp"
+           		android:background="@drawable/botones_gr_off"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
+       			
+           		<Button android:layout_marginTop="5dp" android:text="@string/botonOpciones_resetGame" 
+           		android:id="@+id/btnResetGame" android:layout_width="wrap_content" android:layout_height="70dp" android:width="300dp"
+           		android:background="@drawable/botones_gr_off"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
+       			
+       			
+           
+</LinearLayout>
+           
+           
+	</LinearLayout>
+</LinearLayout>

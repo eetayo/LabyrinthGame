@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout_menu"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="10dp">
+              
+   <LinearLayout android:orientation="vertical"
+		android:padding="5dp"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">    
+            
+           
+           
+            <LinearLayout android:orientation="vertical"
+			android:paddingTop="120dp"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+       			
+				<Button android:text="@string/botonMenu_inicio" android:id="@+id/inicio" 
+				android:layout_width="wrap_content" 
+				android:layout_height="70dp" android:width="300dp" 
+				android:background="@drawable/botones_gr3_off"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
+        
+				<Button android:layout_marginTop="5dp" android:width="300dp" android:text="@string/botonMenu_comoJugar" android:layout_height="70dp" android:id="@+id/comoJugar" android:layout_width="wrap_content"
+				android:background="@drawable/botones_gr_off"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
+           		<Button android:layout_marginTop="5dp" android:text="@string/botonMenu_Opciones" android:id="@+id/opciones" android:layout_width="wrap_content" android:layout_height="70dp" android:width="300dp"
+           		android:background="@drawable/botones_gr_off"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
+           		<Button android:layout_marginTop="5dp" android:text="@string/botonMenu_Salir" android:id="@+id/salir" android:layout_width="wrap_content" android:layout_height="70dp" android:width="300dp"
+           		android:background="@drawable/botones_gr_off"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
+           
+</LinearLayout>
+           
+           
+	</LinearLayout>
+</LinearLayout>

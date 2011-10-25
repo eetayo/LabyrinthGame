@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	android:id="@+id/LinearLayOutGame"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:myapp="http://schemas.android.com/apk/res/com.chocodroid.labyrinthGame"
+  xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+     android:orientation="vertical"
+     android:layout_width="fill_parent"      
+     android:layout_height="fill_parent"
+     android:padding="0dip">
+	<com.google.ads.AdView android:id="@+id/adView"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         ads:adUnitId="a14e61f83c55d66"
+                         ads:adSize="BANNER"
+                         ads:loadAdOnCreate="true"/> 
+	<FrameLayout android:id="@+id/FrameLayout01"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			xmlns:android="http://schemas.android.com/apk/res/android">
+			
+			<TextView android:id="@+id/mov" android:text="Movimientos: 0" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+			<TextView android:id="@+id/numMin" android:text="Minimos movimientos: 9"  android:layout_width="wrap_content" android:paddingTop="25dip" android:layout_height="wrap_content"></TextView>
+			<ImageView android:id="@+id/marcoJuego" android:layout_width="wrap_content" android:paddingTop="25dip" android:layout_height="wrap_content" android:src="@drawable/madera_marco_juego"></ImageView>
+	</FrameLayout>  
+</LinearLayout>
