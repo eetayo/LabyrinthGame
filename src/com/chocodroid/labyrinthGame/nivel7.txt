@@ -1,6 +1,10 @@
-1,5
+2,3
+3,4
+6,1
+9,7
+3,9
 FINACTIVAR
 pelotaA,1,1
 pelotaB,1,2
 FIN
-RECORD,1
+RECORD,7

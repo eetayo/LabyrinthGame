@@ -1,9 +1,11 @@
 package com.chocodroid.labyrinthGame;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+import com.chocodroid.labyrinthGame.MainActivity.TareaCarga;
 import com.chocodroid.labyrinthGame.save.SaveGame;
 
 import android.app.Activity;
@@ -11,6 +13,7 @@ import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,6 +56,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 	public int nivelActual;
 	public Sonidos sonidos;
 	public ConfiguracionDeUsuario configUsuario;
+	public Button imgMiniPelota;
 	public Button btnInicio;
 	public Button btnComoJugar;
 	public Button btnOpciones;
@@ -69,6 +73,8 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 	public Animation animationMusica;
 	public Animation animationCreditos;
 	public Animation animationResetGame;
+	//AnimationPelota
+	public Animation animationPelota;
 
 	// Botones
 	@Override
@@ -107,9 +113,36 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 
 		fbL = (LinearLayout) findViewById(R.id.layout_menu);
 		fbL.setBackgroundResource(R.drawable.fondo_menu);
+		
+		
+		imgMiniPelota = (android.widget.Button) findViewById(R.id.pelota_mini);
+		animationPelota = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.efecto_boton2);
+		animationPelota.setStartOffset(500);
+		animationPelota.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				//ejecutar nuevamente
+				imgMiniPelota.startAnimation(animationPelota);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		imgMiniPelota.startAnimation(animationPelota);
+		
 
 		btnInicio = (android.widget.Button) findViewById(R.id.inicio);
 		btnInicio.setTextSize(30);
+		btnInicio.setShadowLayer(3, 0, 0, Color.BLACK);
 		btnInicio.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -121,6 +154,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 
 		btnComoJugar = (android.widget.Button) findViewById(R.id.comoJugar);
 		btnComoJugar.setTextSize(30);
+		btnComoJugar.setShadowLayer(3, 0, 0, Color.BLACK);
 		btnComoJugar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -133,6 +167,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 
 		btnOpciones = (android.widget.Button) findViewById(R.id.opciones);
 		btnOpciones.setTextSize(30);
+		btnOpciones.setShadowLayer(3, 0, 0, Color.BLACK);
 		btnOpciones.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -144,6 +179,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 
 		btnSalir = (android.widget.Button) findViewById(R.id.salir);
 		btnSalir.setTextSize(30);
+		btnSalir.setShadowLayer(3, 0, 0, Color.BLACK);
 		btnSalir.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -159,17 +195,17 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		btnInicio.setTypeface(tf);
 		btnComoJugar.setTypeface(tf);
 		btnOpciones.setTypeface(tf);
-		btnSalir.setTypeface(tf);
-
+		btnSalir.setTypeface(tf);		
 	}
 
+	
 	public Handler handlerInicio = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			limpiarAnimaciones();
 			if (animationInicio == null) {
 				animationInicio = AnimationUtils.loadAnimation(
-						getApplicationContext(), R.anim.efecto_boton);
+						getApplicationContext(), R.anim.efecto_boton2);
 				animationInicio.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationEnd(Animation animation) {
@@ -206,7 +242,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 			limpiarAnimaciones();
 			if (animationComoJugar == null) {
 				animationComoJugar = AnimationUtils.loadAnimation(
-						getApplicationContext(), R.anim.efecto_boton);
+						getApplicationContext(), R.anim.efecto_boton2);
 				animationComoJugar
 						.setAnimationListener(new AnimationListener() {
 							@Override
@@ -244,7 +280,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 			limpiarAnimaciones();
 			if (animationOpciones == null) {
 				animationOpciones = AnimationUtils.loadAnimation(
-						getApplicationContext(), R.anim.efecto_boton);
+						getApplicationContext(), R.anim.efecto_boton2);
 				animationOpciones.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationEnd(Animation animation) {
@@ -275,7 +311,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		public void handleMessage(Message msg) {
 			limpiarAnimaciones();
 			if (animationSalir == null) {
-				animationSalir = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.efecto_boton);
+				animationSalir = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.efecto_boton2);
 				animationSalir.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationEnd(Animation animation) {
@@ -321,6 +357,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		// boton sonidos
 		btnSonidos = (android.widget.Button) findViewById(R.id.btnSonidos);
 		btnSonidos.setTextSize(30);
+		btnSonidos.setShadowLayer(3, 0, 0, Color.BLACK);
 		if (configUsuario.isSonidoActivado()) {
 			btnSonidos.setText(R.string.botonOpciones_sonidos_ON);
 			btnSonidos.setBackgroundDrawable(getResources().getDrawable(R.drawable.botones_gr_off));
@@ -341,6 +378,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		// boton musica
 		btnMusica = (android.widget.Button) findViewById(R.id.btnMusica);
 		btnMusica.setTextSize(30);
+		btnMusica.setShadowLayer(3, 0, 0, Color.BLACK);
 		if (configUsuario.isMusicaActivada()) {
 			btnMusica.setText(R.string.botonOpciones_musica_ON);
 			btnMusica.setBackgroundDrawable(getResources().getDrawable(R.drawable.botones_gr_off));
@@ -361,6 +399,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		// boton creditos
 		btnCreditos = (android.widget.Button) findViewById(R.id.btnCreditos);
 		btnCreditos.setTextSize(30);
+		btnCreditos.setShadowLayer(3, 0, 0, Color.BLACK);
 		btnCreditos.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -373,6 +412,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		// boton reset game
 		btnResetGame = (android.widget.Button) findViewById(R.id.btnResetGame);
 		btnResetGame.setTextSize(30);
+		btnResetGame.setShadowLayer(3, 0, 0, Color.BLACK);
 		btnResetGame.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -385,6 +425,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		// boton reset game
 		btnVolver = (android.widget.Button) findViewById(R.id.btnVolver);
 		btnVolver.setTextSize(30);
+		btnVolver.setShadowLayer(3, 0, 0, Color.BLACK);
 		btnVolver.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -411,7 +452,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 			limpiarAnimaciones();
 			if (animationSonidos == null) {
 				animationSonidos = AnimationUtils.loadAnimation(
-						getApplicationContext(), R.anim.efecto_boton);
+						getApplicationContext(), R.anim.efecto_boton2);
 				animationSonidos.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationEnd(Animation animation) {
@@ -452,7 +493,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 			limpiarAnimaciones();
 			if (animationMusica == null) {
 				animationMusica = AnimationUtils.loadAnimation(
-						getApplicationContext(), R.anim.efecto_boton);
+						getApplicationContext(), R.anim.efecto_boton2);
 				animationMusica.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationEnd(Animation animation) {
@@ -494,7 +535,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 			limpiarAnimaciones();
 			if (animationCreditos == null) {
 				animationCreditos = AnimationUtils.loadAnimation(
-						getApplicationContext(), R.anim.efecto_boton);
+						getApplicationContext(), R.anim.efecto_boton2);
 				animationCreditos.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationEnd(Animation animation) {
@@ -527,7 +568,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 			limpiarAnimaciones();
 			if (animationResetGame == null) {
 				animationResetGame = AnimationUtils.loadAnimation(
-						getApplicationContext(), R.anim.efecto_boton);
+						getApplicationContext(), R.anim.efecto_boton2);
 				animationResetGame.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationEnd(Animation animation) {
@@ -560,7 +601,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 			limpiarAnimaciones();
 			if (animationVolver == null) {
 				animationVolver = AnimationUtils.loadAnimation(
-						getApplicationContext(), R.anim.efecto_boton);
+						getApplicationContext(), R.anim.efecto_boton2);
 				animationVolver.setAnimationListener(new AnimationListener() {
 					@Override
 					public void onAnimationEnd(Animation animation) {

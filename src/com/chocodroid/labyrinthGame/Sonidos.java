@@ -11,6 +11,7 @@ public class Sonidos {
 
 	private Context mContext;
 	private static MediaPlayer choque_bola;
+	private static MediaPlayer choque_bola2;
 	private static MediaPlayer pulsacion_boton;
 	private static MediaPlayer musica;
 	
@@ -22,6 +23,7 @@ public class Sonidos {
 		this.mContext = _mContext;
 		this.config = config;
 		choque_bola = MediaPlayer.create(mContext, R.raw.choque_bola);
+		choque_bola2 = MediaPlayer.create(mContext, R.raw.choque_bola);
 		pulsacion_boton = MediaPlayer.create(mContext, R.raw.pulsacion_boton_corta);
 		musica = MediaPlayer.create(mContext, R.raw.musica);
 	}
@@ -33,6 +35,8 @@ public class Sonidos {
 			 if(!choque_bola.isPlaying()){
 				 choque_bola.start();
 				 //mActivity.v.vibrate(50);
+			 }else{
+				 choque_bola2.start();
 			 }
 		 }
 	 }

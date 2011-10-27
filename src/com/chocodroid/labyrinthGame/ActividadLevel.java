@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.Inflater;
 
+import com.chocodroid.labyrinthGame.MainActivity.TareaCarga;
 import com.chocodroid.labyrinthGame.save.SaveGame;
 import com.chocodroid.labyrinthGame.save.Score;
 
@@ -19,6 +21,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -51,7 +54,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class ActividadLevel extends Activity{
 	
 	public int numero;
-	public int nivelActual;
+	public int nivelMaximoAlacanzado;
 	public int mundoActual;
 	public ArrayList<DatosNivel> listadoNiveles=new ArrayList();
 	public ArrayList<Score>  listaResultados;
@@ -69,6 +72,11 @@ public class ActividadLevel extends Activity{
 	private int numeroEstrellasMundo4=0;
 	private int numeroEstrellasMundo5=0;
 	
+	private boolean activadoMundo2=false;
+	private boolean activadoMundo3=false;
+	private boolean activadoMundo4=false;
+	private boolean activadoMundo5=false;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,6 +84,9 @@ public class ActividadLevel extends Activity{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(1);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		//transacion entre dos actividades
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		setContentView(R.layout.loading_game);
 		sv = new SaveGame(this);
 		listaFramesLayOut = new HashMap();
 	  final Bundle extras = getIntent().getExtras();
@@ -94,259 +105,222 @@ public class ActividadLevel extends Activity{
 		sonidos = new Sonidos(this.getApplicationContext(),configUsuario);
 	        
 		//recuperar Nivel Actual
-		 //int nivel = Integer.valueOf(getIntent().getExtras().getString("nivel"));
-		 //if(nivel>0)nivel=nivel-1;
-	     //this.nivelActual = nivel;
+		 if(getIntent()!=null && getIntent().getExtras()!=null && getIntent().getExtras().getString("nivel_ultimo")!=null){
+			 int nivel = Integer.valueOf(getIntent().getExtras().getString("nivel_ultimo"));
+			 if(nivel>20 && nivel<41){
+				 this.mundoActual=2;
+			 }else if(nivel>40 && nivel<61){
+				 this.mundoActual=3;
+			 }else if(nivel>60 && nivel<81){
+				 this.mundoActual=4;
+			 }else if(nivel>80 && nivel<101){
+				 this.mundoActual=5;
+			 }
+		 }else{
+			 this.mundoActual=0;
+		 }
 		
-	     this.mundoActual=0;
 	 //RecuperarDatosNiveles
 	    this.cargarDatosNiveles("datos_niveles.txt"); 
 	    this.cargarResultados();
+	    
+	  //ÀEsta mundo desbloqueado?
+		if(nivelMaximoAlacanzado>=20){
+			activadoMundo2 = true;
+		}
+		if(nivelMaximoAlacanzado>=40){
+			activadoMundo3 = true;
+		}
+		if(nivelMaximoAlacanzado>=60){
+			activadoMundo4 = true;
+		}
+		if(nivelMaximoAlacanzado>=80){
+			activadoMundo5 = true;
+		}
 	     
-		// create the view switcher
-		realViewSwitcher = new RealViewSwitcher(getApplicationContext());
 		
-		// add some views to it
-		//final int[] backgroundColors = { Color.RED, Color.BLUE, Color.CYAN, Color.GREEN, Color.YELLOW };
-		for (int num = 1; num <= Constantes.NUMERO_MUNDOS; num++) {
-			FrameLayout fly = new FrameLayout(this); 
-			//fly.setOrientation(LinearLayout.VERTICAL);
-			//fly.setPadding(0, (int)(75*this.getResources().getDisplayMetrics().density), 0, 0);
-			
-			
-			//CARGAR FONDO
-			fly.setBackgroundResource(this.cargarFondoSegunMundo(num));
-			
-			//BOTON MUNDO
-			Typeface tf = Typeface.createFromAsset(this.getAssets(),"font/damnarc.ttf");
-			final Button btnMundo = new Button(this);
-			//Recuperar texto y ver el tema–o del texto, segun el tama–o coloar N Espacios
-			String txtEM = this.getString(R.string.botonElegirMundo);
-			btnMundo.setText(txtEM + "   ");
-			if(num==1){
-				btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr4_off));
-			}else if(num==2){
-				btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr5_off));
-			}else if(num==3){
-				btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr2_off));
-			}else if(num==4){
-				btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr_off));
-			}else if(num==5){
-				btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr3_off));
+		 // Inicializaci—n de la actividad, layout, etc
+        TareaCarga task = new TareaCarga(this);
+        task.execute("inicio");
+		
+	}
+	
+	static class TareaCarga extends AsyncTask<String, Void, Void> {
+		WeakReference<ActividadLevel> context;
+
+		public TareaCarga(ActividadLevel activity) {
+			context = new WeakReference<ActividadLevel>(activity);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// Av’sele al usuario que estamos trabajando
+		}
+
+		@Override
+		protected Void doInBackground(String... params) {
+			// Aqu’ hacemos una tarea laaarga
+			ActividadLevel activity = context.get();
+			activity.cargarInicial();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			ActividadLevel activity = context.get();
+			if (activity != null && !activity.isFinishing()) {
+				// Aqu’ actualizamos la UI con el resultado
+				activity.cargarInicialPantalla();
+
 			}
 			
-			btnMundo.setTextSize(40);
-			btnMundo.setGravity(Gravity.CENTER);
-			btnMundo.setWidth((int)(250*this.getResources().getDisplayMetrics().density));
-			btnMundo.setTextColor(Color.WHITE);
-			FrameLayout.LayoutParams layoutParamsMundo = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
-			layoutParamsMundo.setMargins(0, (int)(70*getResources().getDisplayMetrics().density), 0, 0);
-			btnMundo.setLayoutParams(layoutParamsMundo); 
-			btnMundo.setTypeface(tf);
-			btnMundo.setShadowLayer(3, 0, 0, Color.BLACK); 
-			btnMundo.setId(num);
-			btnMundo.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					cargarGridNivelesDeMundo(btnMundo.getId());
-					mundoActual=btnMundo.getId();
-				}
-			});
-			fly.addView(btnMundo); 
-			
-			//IMAGEN DEL NUMERO DE MUNDO
-			ImageView numero = new ImageView(this);
-			if(num==1){
-				numero.setBackgroundResource(R.drawable.elegir_mundo_numero_1);
-			}else if(num==2){
-				numero.setBackgroundResource(R.drawable.elegir_mundo_numero_2);
-			}else if(num==3){
-				numero.setBackgroundResource(R.drawable.elegir_mundo_numero_3);
-			}else if(num==4){
-				numero.setBackgroundResource(R.drawable.elegir_mundo_numero_4);
-			}else if(num==5){
-				numero.setBackgroundResource(R.drawable.elegir_mundo_numero_5);
-			}
-			
-	        FrameLayout.LayoutParams layoutParamsNumero = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, AbsoluteLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
-	        layoutParamsNumero.setMargins((int)(70*getResources().getDisplayMetrics().density),(int)(80*getResources().getDisplayMetrics().density), 0, 0);
-	        numero.setLayoutParams(layoutParamsNumero);      
-	        fly.addView(numero);
-			
-			//CARGAR VENTANA
-			ImageView ventana = new ImageView(this);
-			ventana.setBackgroundResource(this.cargarVentanaSegunMundo(num));
-	        FrameLayout.LayoutParams layoutParamsFondoCabecera = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, AbsoluteLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
-	        layoutParamsFondoCabecera.setMargins(0,(int)(150*getResources().getDisplayMetrics().density), 0, 0);
-	        ventana.setLayoutParams(layoutParamsFondoCabecera);      
-	        fly.addView(ventana);
-			
-	        listaFramesLayOut.put(num, fly);
-	        
-	        //CARGAR VENTANA
-	        Button contenedorNumeroEstrellas = new Button(this);
-			if(num==1){
-				contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_amarilla_on);
-			}else if(num==2){
-				contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_verde_on);
-			}else if(num==3){
-				contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_negro_on);
-			}else if(num==4){
-				contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_azul_on);
-			}else if(num==5){
-				contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_rojo_on);
-			}
-			Typeface tfBerlin = Typeface.createFromAsset(this.getAssets(),"font/berlin_sans_bold.ttf");
-			FrameLayout.LayoutParams layoutParamsContenedorNumeroEstrellas = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, AbsoluteLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
-	        layoutParamsContenedorNumeroEstrellas.setMargins(0,(int)(370*getResources().getDisplayMetrics().density), 0, 0);
-	        contenedorNumeroEstrellas.setLayoutParams(layoutParamsContenedorNumeroEstrellas);  
-	        contenedorNumeroEstrellas.setTypeface(tfBerlin);
-	        if(num==1){
-		        contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo1 + "/60  ");
-			}else if(num==2){
-				 contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo2 + "/60  ");
-			}else if(num==3){
-				 contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo3 + "/60  ");
-			}else if(num==4){
-				 contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo4 + "/60  ");
-			}else if(num==5){
-				 contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo5 + "/60  ");
-			}
-	        contenedorNumeroEstrellas.setTextSize(30);
-			contenedorNumeroEstrellas.setTextColor(Color.WHITE);
-	        fly.addView(contenedorNumeroEstrellas);
-	        
-	        
-	        
-	        /*
-			
-			TextView txtNivel = new TextView(getApplicationContext());
-			txtNivel.setText(Integer.toString(num));
-			txtNivel.setTextSize(100);
-			txtNivel.setTextColor(Color.BLACK);
-			txtNivel.setGravity(Gravity.CENTER);
-			txtNivel.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-			
-			TextView txtRecord = new TextView(getApplicationContext());
-			txtRecord.setText("Record:"+this.listadoNiveles.get(num-1).getRecord());
-			txtRecord.setTextSize(30);
-			txtRecord.setTextColor(Color.BLACK);
-			txtRecord.setGravity(Gravity.CENTER);
-			//txtRecord.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-//DESACTIVO BLOQUEO DE NIVELES				
-			//if(num==1 || listadoNiveles.get(num-2).getResultadosJugador()!=null){
-				TextView txtMarcaActual = new TextView(getApplicationContext());
-				if(listadoNiveles.get(num-1).getResultadosJugador()==null){
-					txtMarcaActual.setText("Tu Marca:");
-				}else{
-					txtMarcaActual.setText("Tu Marca:"+listadoNiveles.get(num-1).getResultadosJugador().getScore());
-				}
-				txtMarcaActual.setTextSize(37);
-				txtMarcaActual.setTextColor(Color.RED);
-				txtMarcaActual.setGravity(Gravity.CENTER);
-				
-				
-				final Button btn = new Button(getApplicationContext());
-				btn.setText("Jugar");
-				btn.setTextSize(50);
-				btn.setGravity(Gravity.CENTER);
-				//btn.setMaxWidth(550);
-				btn.setBackgroundColor(Color.TRANSPARENT);
-				//Asignar fuente 
-		        Typeface tf = Typeface.createFromAsset(this.getAssets(),"font/fuente1.ttf");
-		        btn.setTypeface(tf);
-		        //asignar estilos boton
-				btn.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.estilos_botones_menu));
-				btn.setTextColor(Color.WHITE);
-				
-				final Button btnMenu = new Button(getApplicationContext());
-				btnMenu.setText("Menu");
-				btnMenu.setTextSize(30);
-				btnMenu.setGravity(Gravity.CENTER);
-				btnMenu.setBackgroundColor(Color.TRANSPARENT);
-				//Asignar fuente 
-				btnMenu.setTypeface(tf);
-		        //asignar estilos boton
-				btnMenu.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.estilos_botones_menu));
-				btnMenu.setTextColor(Color.WHITE);
-				
-				btnMenu.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						sonidos.ejecutarPulsacionBoton();
-						//cambiar de actividad
-						Intent i = new Intent(ActividadLevel.this, ActividadMenu.class);
-						startActivity(i);
-						finish();
+		}
+	}
+	
+	public void cargarInicial(){
+		// create the view switcher
+				realViewSwitcher = new RealViewSwitcher(getApplicationContext());
+				for (int num = 1; num <= Constantes.NUMERO_MUNDOS; num++) {
+					FrameLayout fly = new FrameLayout(this); 
+					//CARGAR FONDO
+					fly.setBackgroundResource(this.cargarFondoSegunMundo(num));
+					
+					
+					//BOTON MUNDO
+					Typeface tf = Typeface.createFromAsset(this.getAssets(),"font/damnarc.ttf");
+					final Button btnMundo = new Button(this);
+					//Recuperar texto y ver el tema–o del texto, segun el tama–o coloar N Espacios
+					String txtEM = this.getString(R.string.botonElegirMundo);
+					btnMundo.setText(txtEM + "   ");
+					if(num==1){
+						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr4_off));
+					}else if(num==2){
+						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr5_off));
+					}else if(num==3){
+						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr2_off));
+					}else if(num==4){
+						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr_off));
+					}else if(num==5){
+						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr3_off));
 					}
-				}); 
-				
-				
-				//numero = num;
-				LinearLayout layoutAux = new LinearLayout(this);
-				layoutAux.setOrientation(LinearLayout.VERTICAL);
-				LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.FILL_PARENT, 
-				LinearLayout.LayoutParams.WRAP_CONTENT);
-				layoutParams.setMargins((int)(25*this.getResources().getDisplayMetrics().density), 0, 
-										(int)(25*this.getResources().getDisplayMetrics().density), 20);
-				layoutAux.addView(btn, layoutParams);
-				layoutAux.addView(btnMenu, layoutParams);
-				
-				
-				btn.setId(num);
-				btn.setOnClickListener(new OnClickListener() {
+					
+					btnMundo.setTextSize(40);
+					btnMundo.setGravity(Gravity.CENTER);
+					btnMundo.setWidth((int)(250*this.getResources().getDisplayMetrics().density));
+					btnMundo.setTextColor(Color.WHITE);
+					FrameLayout.LayoutParams layoutParamsMundo = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+					layoutParamsMundo.setMargins(0, (int)(70*getResources().getDisplayMetrics().density), 0, 0);
+					btnMundo.setLayoutParams(layoutParamsMundo); 
+					btnMundo.setTypeface(tf);
+					btnMundo.setShadowLayer(3, 0, 0, Color.BLACK); 
+					btnMundo.setId(num);
+					btnMundo.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							sonidos.ejecutarPulsacionBoton();
-							//cambiar de actividad
-							Intent i = new Intent(ActividadLevel.this, MainActivity.class);
-							i.putExtra("nivel", String.valueOf(btn.getId()));
-							//i.putExtra("com.chocodroid.labyrinthGame.ConfiguracionDeUsuario", configUsuario);
-							startActivity(i);
-							//finish();
+							if((btnMundo.getId()==1) ||
+								(btnMundo.getId()==2 && activadoMundo2) ||
+								(btnMundo.getId()==3 && activadoMundo3) ||
+								(btnMundo.getId()==4 && activadoMundo4) ||
+								(btnMundo.getId()==5 && activadoMundo5)){
+									cargarGridNivelesDeMundo(btnMundo.getId());
+									mundoActual=btnMundo.getId();
+							}
 						}
-			    });
-				//fly.setBackgroundResource(R.drawable.fondo_menu);
-				fly.addView(txtNivel);
-				fly.addView(txtRecord);
-				fly.addView(txtMarcaActual);
-				fly.addView(layoutAux);
-				*/
-//DESACTIVO BLOQUEO DE NIVELES	
-			/*}else{
-				fly.setBackgroundResource(R.drawable.fondo_menu);
-				fly.addView(txtNivel);
-				fly.addView(txtRecord);
-			
-				ImageView imgBloqueado = new ImageView(getApplicationContext());
-				imgBloqueado.setBackgroundResource(R.drawable.nivel_bloqueado);
-				fly.addView(imgBloqueado);
-			}*/
-			
-			
-			
-			realViewSwitcher.addView(fly);	
-		}
-		//PROBAR
-		//realViewSwitcher.setBackgroundResource(R.drawable.fondo_menu_triple);
+					});
+					fly.addView(btnMundo); 
+					
+					//IMAGEN DEL NUMERO DE MUNDO
+					ImageView numero = new ImageView(this);
+					if(num==1){
+						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_1);
+					}else if(num==2){
+						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_2);
+					}else if(num==3){
+						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_3);
+					}else if(num==4){
+						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_4);
+					}else if(num==5){
+						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_5);
+					}
+					
+			        FrameLayout.LayoutParams layoutParamsNumero = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, AbsoluteLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+			        layoutParamsNumero.setMargins((int)(70*getResources().getDisplayMetrics().density),(int)(80*getResources().getDisplayMetrics().density), 0, 0);
+			        numero.setLayoutParams(layoutParamsNumero);      
+			        fly.addView(numero);
+					
+					//CARGAR VENTANA
+					ImageView ventana = new ImageView(this);
+					if((num==1) ||
+							(num==2 && activadoMundo2) ||
+							(num==3 && activadoMundo3) ||
+							(num==4 && activadoMundo4) ||
+							(num==5 && activadoMundo5)){
+							ventana.setBackgroundResource(this.cargarVentanaSegunMundo(num));
+					}else{
+						ventana.setBackgroundResource(R.drawable.elegir_mundo_numero_ventana_cerrada);
+					}
+					
+			        FrameLayout.LayoutParams layoutParamsFondoCabecera = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, AbsoluteLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+			        layoutParamsFondoCabecera.setMargins(0,(int)(150*getResources().getDisplayMetrics().density), 0, 0);
+			        ventana.setLayoutParams(layoutParamsFondoCabecera);      
+			        fly.addView(ventana);
+					
+			        listaFramesLayOut.put(num, fly);
+			        
+			        //CARGAR VENTANA
+			        Button contenedorNumeroEstrellas = new Button(this);
+					if(num==1){
+						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_amarilla_on);
+					}else if(num==2){
+						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_verde_on);
+					}else if(num==3){
+						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_negro_on);
+					}else if(num==4){
+						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_azul_on);
+					}else if(num==5){
+						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_rojo_on);
+					}
+					Typeface tfBerlin = Typeface.createFromAsset(this.getAssets(),"font/berlin_sans_bold.ttf");
+					FrameLayout.LayoutParams layoutParamsContenedorNumeroEstrellas = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, AbsoluteLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+			        layoutParamsContenedorNumeroEstrellas.setMargins(0,(int)(370*getResources().getDisplayMetrics().density), 0, 0);
+			        contenedorNumeroEstrellas.setLayoutParams(layoutParamsContenedorNumeroEstrellas);  
+			        contenedorNumeroEstrellas.setTypeface(tfBerlin);
+			        if(num==1){
+				        contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo1 + "/60  ");
+					}else if(num==2){
+						 contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo2 + "/60  ");
+					}else if(num==3){
+						 contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo3 + "/60  ");
+					}else if(num==4){
+						 contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo4 + "/60  ");
+					}else if(num==5){
+						 contenedorNumeroEstrellas.setText(this.numeroEstrellasMundo5 + "/60  ");
+					}
+			        contenedorNumeroEstrellas.setTextSize(30);
+					contenedorNumeroEstrellas.setTextColor(Color.WHITE);
+			        fly.addView(contenedorNumeroEstrellas);
+			        
+			        
+			        
+			     	
+					realViewSwitcher.addView(fly);	
+				}
+				//PROBAR
+				//realViewSwitcher.setBackgroundResource(R.drawable.fondo_menu_triple);
+				
+				realViewSwitcher.setCurrentScreen(mundoActual);
+				
+	}
+	
+	public void cargarInicialPantalla(){
 		
-		realViewSwitcher.setCurrentScreen(mundoActual);
-		
-		
-		//transacion entre dos actividades
-		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		setContentView(realViewSwitcher);
-		
-		
-		
-		
-		
+				
 		// OPTIONAL: listen for screen changes
 		realViewSwitcher.setOnScreenSwitchListener(onScreenSwitchListener);
 		realViewSwitcher.setSistemaMovimientoActivado(true);
+		
 	}
-	
 	
 	public int cargarFondoSegunMundo(int mundo){
 		if(mundo==1){
@@ -377,7 +351,6 @@ public class ActividadLevel extends Activity{
 		}
 		return 0;
 	}
-	
 	
 	public void cargarGridNivelesDeMundo(int mundo){
 		//tapa transparencia
@@ -445,6 +418,9 @@ public class ActividadLevel extends Activity{
 		listaResultados = sv.readAllScore();
 		for(Score s:listaResultados){
 			System.out.println("Nivel:" + s.getLevel() + "  Resultado:" +s.getScore());
+			if(Integer.parseInt(s.getLevel())>nivelMaximoAlacanzado){
+				nivelMaximoAlacanzado=Integer.parseInt(s.getLevel());
+			}
 			DatosNivel dn = listadoNiveles.get(Integer.valueOf(s.getLevel())-1);
 			dn.setResultadosJugador(s);
 			s.setMovMin(dn.getRecord());
@@ -465,15 +441,11 @@ public class ActividadLevel extends Activity{
 		
 	}
 	
-	
-
 	public void cargarDatosNiveles(String nombreFichero){
 		InputStream is = this.getClass().getResourceAsStream(nombreFichero);
 		String txt = this.convertStreamToString(is);
 		this.leerDatosCompletos(txt);	
 	}
-	
-	
 	
 	public String convertStreamToString(InputStream is) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -607,13 +579,14 @@ public class ActividadLevel extends Activity{
 		}
 	 
 	 public void cambiarAJuego(int nivel){
-		 sv.cerrarBD();
-		 this.liberarMemoria();
+		 setContentView(R.layout.loading_game);
 		 System.out.println("Nivel:"+nivel + "   Mundo:"+mundoActual);
 		 Intent i = new Intent(ActividadLevel.this, MainActivity.class);
 		 i.putExtra("nivel", String.valueOf(nivel));
 		 i.putExtra("mundo", String.valueOf(mundoActual));
 		 startActivity(i);
+		 sv.cerrarBD();
+		 this.liberarMemoria();
 		 finish();
 	 }
 }

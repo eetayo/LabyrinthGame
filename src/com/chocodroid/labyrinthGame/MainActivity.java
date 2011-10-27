@@ -75,12 +75,14 @@ public class MainActivity extends Activity implements OnTouchListener,
 	public ImageView tapaFinal;
 	public ImageView tapaPause;
 	public TextView txtNivelCompletado;
+	public TextView txtNumeroNivel;
 	// BOTONES PARA PAUSE
 	public Button btnPulsadores;
 	public Button btnMusica;
 	public Button btnSonidos;
 	public Button btnReiniciar;
 	public Button btnReiniciar2;
+	public Button btnReiniciar3;
 	public Button btnSalir;
 	public Button btnContinuar;
 	public Button btnVolver;
@@ -186,16 +188,14 @@ public class MainActivity extends Activity implements OnTouchListener,
 		//adView.loadAd(r);
 		// FIN PUBLICDAD ADMOB
 
-		String esPantallaTutorial = getIntent().getExtras().getString(
-				"comoJugar");
+		String esPantallaTutorial = getIntent().getExtras().getString("comoJugar");
 		if (esPantallaTutorial != null && esPantallaTutorial.equals("Si")) {
 			fbL = (FrameLayout) findViewById(R.id.FrameLayout01);
 			fbL.setOnTouchListener((OnTouchListener) this);
 			this.cargarFondo();
 			this.cargaInicialTutorial();
 		} else {
-			int nivel = Integer.valueOf(getIntent().getExtras().getString(
-					"nivel"));
+			int nivel = Integer.valueOf(getIntent().getExtras().getString("nivel"));
 
 			if (nivel < 21) {
 				this.TEMA_NIVEL = Constantes.TEMA_MADERA;
@@ -218,6 +218,28 @@ public class MainActivity extends Activity implements OnTouchListener,
 			fbL.setOnTouchListener((OnTouchListener) this);
 			this.cargarFondo();
 			this.cargaInicial(this.nivel);
+			//Cargar Texto nivel
+			txtNumeroNivel = new TextView(this);
+			Typeface tf = Typeface.createFromAsset(this.getAssets(),"font/damnarc.ttf");
+			FrameLayout.LayoutParams layoutParamsTxtNivel = new FrameLayout.LayoutParams(
+					FrameLayout.LayoutParams.WRAP_CONTENT,
+					FrameLayout.LayoutParams.WRAP_CONTENT,
+					Gravity.CENTER_HORIZONTAL);
+			layoutParamsTxtNivel.setMargins(0, (int) (Constantes.POSICION_INICIAL * getResources()
+					.getDisplayMetrics().density), 0, 0);
+			txtNumeroNivel.setLayoutParams(layoutParamsTxtNivel);
+			txtNumeroNivel.setTextColor(Color.WHITE);
+			txtNumeroNivel.setTypeface(tf);
+			txtNumeroNivel.setText("Mundo:1  Nivel:1");
+			txtNumeroNivel.setTextSize(30);
+			Animation animationTexto = AnimationUtils.loadAnimation(
+					getApplicationContext(), R.anim.transparente_en_2seg);
+			//animationTexto.setFillEnabled(true);
+			animationTexto.setFillAfter(true);
+			txtNumeroNivel.startAnimation(animationTexto);
+			txtNumeroNivel.setShadowLayer(3, 0, 0, Color.BLACK);
+			fbL.addView(txtNumeroNivel);
+			
 		}
 
 	}
@@ -556,11 +578,10 @@ public class MainActivity extends Activity implements OnTouchListener,
 
 		// NIVEL COMPLETADO
 		TextView txtNivelCompletado = new TextView(this);
-		txtNivelCompletado.setText("¡Superado!");
+		txtNivelCompletado.setText("ÁSuperado!");
 		txtNivelCompletado.setTextSize(37);
 		txtNivelCompletado.setTextColor(Color.BLACK);
-		Typeface tf = Typeface.createFromAsset(this.getAssets(),
-				"font/fuente1.ttf");
+		Typeface tf = Typeface.createFromAsset(this.getAssets(),"font/fuente1.ttf");
 		txtNivelCompletado.setTypeface(tf);
 		FrameLayout.LayoutParams layoutParamsNC = new FrameLayout.LayoutParams(
 				FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -573,24 +594,24 @@ public class MainActivity extends Activity implements OnTouchListener,
 
 		// BOTO
 
-		Button btnReiniciar = new Button(this);
-		btnReiniciar.setText("Reiniciar");
-		btnReiniciar.setTextSize(30);
-		btnReiniciar.setGravity(Gravity.CENTER);
-		btnReiniciar.setWidth((int) (250 * this.getResources()
+		btnReiniciar3 = new Button(this);
+		btnReiniciar3.setText("Reiniciar");
+		btnReiniciar3.setTextSize(30);
+		btnReiniciar3.setGravity(Gravity.CENTER);
+		btnReiniciar3.setWidth((int) (250 * this.getResources()
 				.getDisplayMetrics().density));
-		btnReiniciar.setBackgroundDrawable(this.getResources().getDrawable(
+		btnReiniciar3.setBackgroundDrawable(this.getResources().getDrawable(
 				R.drawable.boton_estrellas_amarilla_on));
-		btnReiniciar.setTextColor(Color.WHITE);
+		btnReiniciar3.setTextColor(Color.WHITE);
 		FrameLayout.LayoutParams layoutParamsReiniciar = new FrameLayout.LayoutParams(
 				FrameLayout.LayoutParams.WRAP_CONTENT,
 				FrameLayout.LayoutParams.WRAP_CONTENT,
 				Gravity.CENTER_HORIZONTAL);
 		layoutParamsReiniciar.setMargins(0, (int) (140 * getResources()
 				.getDisplayMetrics().density), 0, 0);
-		btnReiniciar.setLayoutParams(layoutParamsReiniciar);
-		btnReiniciar.setTypeface(tf);
-		btnReiniciar.setOnClickListener(new OnClickListener() {
+		btnReiniciar3.setLayoutParams(layoutParamsReiniciar);
+		btnReiniciar3.setTypeface(tf);
+		btnReiniciar3.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				sonidos.pararMusicaJuego();
@@ -601,7 +622,7 @@ public class MainActivity extends Activity implements OnTouchListener,
 				cargaInicial(MainActivity.nivel);
 			}
 		});
-		this.fbL.addView(btnReiniciar);
+		this.fbL.addView(btnReiniciar3);
 
 		Button btnSalir = new Button(this);
 		btnSalir.setText("Salir");
@@ -655,10 +676,22 @@ public class MainActivity extends Activity implements OnTouchListener,
 				// SaveGame sv = new SaveGame(getApplicationContext());
 				// Cargar resultado Actual, en caso de ser mejor que el que ya
 				// existia
+				if(sv==null) sv = new SaveGame(getApplicationContext());
 				sv.writeScore(String.valueOf(MainActivity.nivel),
 						MainActivity.marcadorActual.getValor(), "f", "N");
 				MainActivity.nivel = nivel + 1;
-				cargaInicial(MainActivity.nivel);
+				if(nivel==21 || nivel==41 || nivel==61 || nivel==81){
+					setContentView(R.layout.loading_game);
+					//Saltar a mundo2
+					//cambiar de actividad
+					Intent i = new Intent(MainActivity.this, ActividadLevel.class);
+					i.putExtra("nivel_ultimo", String.valueOf(nivel));
+					startActivity(i);
+					finish();
+				}else{
+					//si es cualquier otro mundo cargarlo
+					cargaInicial(MainActivity.nivel);
+				}
 				// cambiar de actividad
 				// Intent i = new Intent(MainActivity.this,
 				// ActividadLevel.class);

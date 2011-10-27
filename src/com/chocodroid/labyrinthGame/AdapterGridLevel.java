@@ -113,6 +113,10 @@ import android.widget.ImageView;
 	    	int ultimoNivelAlcanzado = 0;
 	    	if(listaResultados!=null){
 		    	for(Score s:listaResultados){
+		    		if(Integer.valueOf(s.getLevel())>ultimoNivelAlcanzado){
+	    				ultimoNivelAlcanzado = Integer.valueOf(s.getLevel());
+	    			}
+		    		
 		    		if(mundo==1 && Integer.parseInt(s.getLevel())<21){
 		    			//comprobar el numero de movimientos y poner una u otra imagen dependiendo del resultado
 		    			if(s.devolverNumeroEstrellas()==0){
@@ -123,12 +127,7 @@ import android.widget.ImageView;
 		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel2estrellas;
 		    			}else if(s.devolverNumeroEstrellas()==3){
 		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel3estrellas;
-		    			}
-
-			    		
-			    		if(Integer.valueOf(s.getLevel())>ultimoNivelAlcanzado){
-		    				ultimoNivelAlcanzado = Integer.valueOf(s.getLevel());
-		    			}
+		    			}			    		
 		    		}else if(mundo==2 && Integer.parseInt(s.getLevel())>20 && Integer.parseInt(s.getLevel())<41){
 		    			if(s.devolverNumeroEstrellas()==0){
 		    				mThumbIds[Integer.valueOf(s.getLevel())-21] = R.drawable.boton_nivel0estrellas;
@@ -173,13 +172,21 @@ import android.widget.ImageView;
 		    	}
 		    }
 	    	
-	    	
+	    	System.out.println("----AdapterGridLevel.java: ultimoNivelAlcanzado: " +ultimoNivelAlcanzado);
 	    	
 	    	for(int i=0;i<mThumbIds.length;i++){
 	    		if(mThumbIds[i]==null){
-	    			if(ultimoNivelAlcanzado==i && ultimoNivelAlcanzado!=0){
+	    			if((ultimoNivelAlcanzado-((mundo-1)*20))==i && ultimoNivelAlcanzado!=0){
 	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
 	    			}else if(mundo==1 && i==0){
+	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    			}else if(mundo==2 && i==0){
+	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    			}else if(mundo==3 && i==0){
+	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    			}else if(mundo==4 && i==0){
+	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    			}else if(mundo==5 && i==0){
 	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
 	    			}else{
 	    				mThumbIds[i] = R.drawable.boton_nivel_bloqueado_estrellas;
