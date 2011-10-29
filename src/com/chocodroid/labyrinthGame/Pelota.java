@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.FrameLayout;
@@ -19,6 +20,10 @@ import android.widget.ImageView;
 public class Pelota extends ImageView implements Comparable  {
 	
 	public static String tipoOrdenacion;
+	
+	
+	public static String SIN_ANIMACION="sinAnimacion";
+	public static String CON_ANIMACION="conAnimacion";
 	
 	public static String MOVER_IZQUIERDA="izquierda";
 	public static String MOVER_DERECHA="derecha";
@@ -31,10 +36,13 @@ public class Pelota extends ImageView implements Comparable  {
 	private int matrizY;
 	private int posicionX;
 	private int posicionY;
+	private int oldPosicionX;
+	private int oldPosicionY;
 	private String nombre;
 	
 	private Activity mActivity;	
 	private static String TEMA_NIVEL = "";
+	private String ANIMACION;
 	
 	
 	public Pelota(Context context,int x, int y,int matrizX,int matrizY,String nombre,Activity mActivity,String tema){
@@ -46,6 +54,7 @@ public class Pelota extends ImageView implements Comparable  {
         this.setNombre(nombre);
         
         //TEMPORAL
+        this.ANIMACION=this.SIN_ANIMACION;
         this.TEMA_NIVEL= tema;
         if(TEMA_NIVEL.equals(Constantes.TEMA_MADERA)){
         	this.setBackgroundResource(R.drawable.madera_pelota);
@@ -122,6 +131,9 @@ public class Pelota extends ImageView implements Comparable  {
 		int mY = this.getMatrizY();
 		System.out.println("Actual:" +this.getMatrizY() + ","+this.getMatrizX());
 		boolean haColisionado=false;
+		//TEMPORAL
+		//this.setOldPosicionX(this.getPosicionX());
+		//this.setOldPosicionY(this.getPosicionY());
 		if(m.equals(MOVER_ARRIBA)){
 			if(this.getMatrizY()>1){
 				Iterator iterE = ((MainActivity)mActivity).gN.listadoElementos.iterator();
@@ -149,9 +161,11 @@ public class Pelota extends ImageView implements Comparable  {
 					//actualizar posY y matrizY
 					int posicionOld = this.getPosicionY();
 					this.setMatrizY(1);
+					//TEMPORAL
 					this.setPosicionY(((Cuadrado)(((MainActivity)mActivity).gN.listaCuadradosCompleta.get(this.getMatrizX()+","+this.getMatrizY()))).getPosicionY());
 					//mover pelota a fila0
 					//this.ejecutarAnimacion(0,this.getPosicionY()-posicionOld);
+					//this.ejecutarAnimacion(this.getPosicionX(),posicionOld,this.getPosicionX(),this.getPosicionY());
 					
 				}else{
 					//actualizar posY y matrizY
@@ -169,6 +183,7 @@ public class Pelota extends ImageView implements Comparable  {
 					this.setPosicionY(((Cuadrado)(((MainActivity)mActivity).gN.listaCuadradosCompleta.get(this.getMatrizX()+","+this.getMatrizY()))).getPosicionY());
 				}
 			}
+			//TEMPORAL
 			this.moverSinAnimacion();
 		}else if(m.equals(MOVER_ABAJO)){
 			if(this.getMatrizY()<9){
@@ -330,60 +345,47 @@ public class Pelota extends ImageView implements Comparable  {
 	}
 	
 	public void moverSinAnimacion(){
-		if(TEMA_NIVEL.equals(Constantes.TEMA_MADERA)){
-        	this.setBackgroundResource(R.drawable.madera_pelota);
-        }else if(TEMA_NIVEL.equals(Constantes.TEMA_VERDE)){
-        	this.setBackgroundResource(R.drawable.verde_pelota);
-        }
-		FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.TOP);
-        layoutParams.setMargins(this.getPosicionX(), (int)(this.getPosicionY()+Constantes.POSICION_INICIAL*scale), 0, 0);
-        this.setLayoutParams(layoutParams); 
+		if(this.ANIMACION.equals(this.SIN_ANIMACION)){
+			if(TEMA_NIVEL.equals(Constantes.TEMA_MADERA)){
+	        	this.setBackgroundResource(R.drawable.madera_pelota);
+	        }else if(TEMA_NIVEL.equals(Constantes.TEMA_VERDE)){
+	        	this.setBackgroundResource(R.drawable.verde_pelota);
+	        }
+			FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.TOP);
+	        layoutParams.setMargins(this.getPosicionX(), (int)(this.getPosicionY()+Constantes.POSICION_INICIAL*scale), 0, 0);
+	        this.setLayoutParams(layoutParams); 
+		}else if(this.ANIMACION.equals(this.CON_ANIMACION)){
+			AnimationSet animationMov = new AnimationSet(true);
+	        	Animation animation = new TranslateAnimation(
+	        	this.getOldPosicionX(),this.getPosicionX(),this.getOldPosicionY(),this.getPosicionY()
+	        );
+	        animation.setDuration(1000);
+	        animation.setFillAfter(true);
+	        animationMov.addAnimation(animation);
+	        animationMov.setFillAfter(true);
+	        this.startAnimation(animationMov);
+		}
 		
 	}
 	
-	public void ejecutarAnimacion(int moverEnX,int moverEnY){	
+	public void ejecutarAnimacion(int oldX, int oldY, int x,int y){	
+		//Animation animationTexto = AnimationUtils.loadAnimation(
+		//		this.mActivity.getApplicationContext(), R.anim.transparente_en_2seg);
+		//animationTexto.setFillEnabled(true);
+		//animationTexto.setFillAfter(true);
+		//animationTexto.
+		 AnimationSet animationMov = new AnimationSet(true);
+
+	        	Animation animation = new TranslateAnimation(
+	            oldX,x,oldY,y
+	        );
+	        animation.setDuration(1000);
+	        animationMov.addAnimation(animation);
+	        animationMov.setFillAfter(true);
+	        this.startAnimation(animationMov);
+        
 		
         
-		//System.out.println("MoverX:"+moverEnX + "  MoverY:"+moverEnY);
-		/*AnimationSet set = new AnimationSet(false);		
-		TranslateAnimation animation = new TranslateAnimation 
-        ( 
-        		0,moverEnX, 
-        		0,moverEnY
-        ); 
-        animation.setDuration(200); 
-        animation.setFillAfter(true);
-        animation.setAnimationListener(new AnimationListener(){
-        	@Override
-        	public void onAnimationEnd(Animation anim){
-        		System.out.println("--------onAnimationEnd---------");
-        	}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onAnimationStart(Animation animation) {
-				// TODO Auto-generated method stub
-				
-			}
-        });
-
-        set.addAnimation(animation);
-        set.setFillAfter(true);
-        //Animation animationA = new AlphaAnimation(1.0f, 0.5f);
-        //animationA.setDuration(300);
-        //set.addAnimation(animationA);
-        //set.setFillBefore(true);
-        set.reset();
-        this.clearAnimation();
-        this.startAnimation(set); 
-        //this.clearAnimation();
-         * 
-         */
 	}
 
 
@@ -442,6 +444,26 @@ public class Pelota extends ImageView implements Comparable  {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.TOP);
         layoutParams.setMargins(posX, (int)(posY+Constantes.POSICION_INICIAL*scale), 0, 0);
         this.setLayoutParams(layoutParams);  		
+	}
+
+
+	public int getOldPosicionX() {
+		return oldPosicionX;
+	}
+
+
+	public void setOldPosicionX(int oldPosicionX) {
+		this.oldPosicionX = oldPosicionX;
+	}
+
+
+	public int getOldPosicionY() {
+		return oldPosicionY;
+	}
+
+
+	public void setOldPosicionY(int oldPosicionY) {
+		this.oldPosicionY = oldPosicionY;
 	}
 	
 }

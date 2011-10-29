@@ -203,7 +203,7 @@ public class MainActivity extends Activity implements OnTouchListener,
 				this.TEMA_NIVEL = Constantes.TEMA_VERDE;
 			} else if (nivel > 40 && nivel < 61) {
 				this.TEMA_NIVEL = Constantes.TEMA_PIEDRA;
-			} else if (nivel > 61 && nivel < 81) {
+			} else if (nivel > 60 && nivel < 81) {
 				this.TEMA_NIVEL = Constantes.TEMA_AGUA;
 			} else if (nivel > 80 && nivel < 101) {
 				this.TEMA_NIVEL = Constantes.TEMA_MERCADO;
@@ -218,27 +218,7 @@ public class MainActivity extends Activity implements OnTouchListener,
 			fbL.setOnTouchListener((OnTouchListener) this);
 			this.cargarFondo();
 			this.cargaInicial(this.nivel);
-			//Cargar Texto nivel
-			txtNumeroNivel = new TextView(this);
-			Typeface tf = Typeface.createFromAsset(this.getAssets(),"font/damnarc.ttf");
-			FrameLayout.LayoutParams layoutParamsTxtNivel = new FrameLayout.LayoutParams(
-					FrameLayout.LayoutParams.WRAP_CONTENT,
-					FrameLayout.LayoutParams.WRAP_CONTENT,
-					Gravity.CENTER_HORIZONTAL);
-			layoutParamsTxtNivel.setMargins(0, (int) (Constantes.POSICION_INICIAL * getResources()
-					.getDisplayMetrics().density), 0, 0);
-			txtNumeroNivel.setLayoutParams(layoutParamsTxtNivel);
-			txtNumeroNivel.setTextColor(Color.WHITE);
-			txtNumeroNivel.setTypeface(tf);
-			txtNumeroNivel.setText("Mundo:1  Nivel:1");
-			txtNumeroNivel.setTextSize(30);
-			Animation animationTexto = AnimationUtils.loadAnimation(
-					getApplicationContext(), R.anim.transparente_en_2seg);
-			//animationTexto.setFillEnabled(true);
-			animationTexto.setFillAfter(true);
-			txtNumeroNivel.startAnimation(animationTexto);
-			txtNumeroNivel.setShadowLayer(3, 0, 0, Color.BLACK);
-			fbL.addView(txtNumeroNivel);
+			
 			
 		}
 
@@ -396,6 +376,28 @@ public class MainActivity extends Activity implements OnTouchListener,
 		} else {
 			imgPulsadores.setVisibility(4);
 		}
+		
+		//Cargar Texto nivel
+		txtNumeroNivel = new TextView(this);
+		Typeface tf = Typeface.createFromAsset(this.getAssets(),"font/damnarc.ttf");
+		FrameLayout.LayoutParams layoutParamsTxtNivel = new FrameLayout.LayoutParams(
+				FrameLayout.LayoutParams.WRAP_CONTENT,
+				FrameLayout.LayoutParams.WRAP_CONTENT,
+				Gravity.CENTER_HORIZONTAL);
+		layoutParamsTxtNivel.setMargins(0, (int) (Constantes.POSICION_INICIAL * getResources()
+				.getDisplayMetrics().density), 0, 0);
+		txtNumeroNivel.setLayoutParams(layoutParamsTxtNivel);
+		txtNumeroNivel.setTextColor(Color.WHITE);
+		txtNumeroNivel.setTypeface(tf);
+		txtNumeroNivel.setText(getResources().getString(R.string.txtJuego_Nivel)+this.nivel);
+		txtNumeroNivel.setTextSize(30);
+		Animation animationTexto = AnimationUtils.loadAnimation(
+				getApplicationContext(), R.anim.transparente_en_2seg);
+		//animationTexto.setFillEnabled(true);
+		animationTexto.setFillAfter(true);
+		txtNumeroNivel.startAnimation(animationTexto);
+		txtNumeroNivel.setShadowLayer(3, 0, 0, Color.BLACK);
+		fbL.addView(txtNumeroNivel);
 
 	}
 
@@ -1373,13 +1375,30 @@ public class MainActivity extends Activity implements OnTouchListener,
 	@Override
 	public void onResume() {
 		super.onResume();
-		/*if (configUsuario.isMusicaActivada()) {
+		sv = new SaveGame(getApplicationContext());
+		if(configUsuario!=null){
+			if (configUsuario.isMusicaActivada()) {
+				if(sonidos!=null){
+					sonidos.ejecutarMusicaJuego();
+				}else{
+					sonidos = new Sonidos(this.getApplicationContext(), configUsuario);
+					sonidos.ejecutarMusicaJuego();
+				}
+			}
+		}else{
+			configUsuario = new ConfiguracionDeUsuario();
+			if (sv.readInt("pulsadores") == 0)
+				configUsuario.setPulsadoresMostrar(true);
+			if (sv.readInt("sonido") == 0)
+				configUsuario.setSonidoActivado(true);
+			if (sv.readInt("musica") == 0)
+				configUsuario.setMusicaActivada(true);
+			// FIN ASIGNACION DE CONFIG
+
+			sonidos = new Sonidos(this.getApplicationContext(), configUsuario);
 			sonidos.ejecutarMusicaJuego();
 		}
-
-		if (sv == null || sv.estaCerrada()) {
-			sv = new SaveGame(getApplicationContext());
-		}*/
+		
 	}
 
 	// --------------------------------------------------------------------------------------

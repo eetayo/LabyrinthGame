@@ -13,6 +13,7 @@ import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +38,8 @@ import android.widget.LinearLayout;
 public class ActividadMenu extends Activity implements OnTouchListener {
 	/** Called when the activity is first created. */
 
+	private Typeface tf;
+	
 	public ImageView tapaPause;
 	public Button btnPulsadores;
 	public Button btnMusica;
@@ -57,6 +60,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 	public Sonidos sonidos;
 	public ConfiguracionDeUsuario configUsuario;
 	public Button imgMiniPelota;
+	public Button imgMiniPelota2;
 	public Button btnInicio;
 	public Button btnComoJugar;
 	public Button btnOpciones;
@@ -75,6 +79,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 	public Animation animationResetGame;
 	//AnimationPelota
 	public Animation animationPelota;
+	public Animation animationPelota2;
 
 	// Botones
 	@Override
@@ -114,7 +119,7 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		fbL = (LinearLayout) findViewById(R.id.layout_menu);
 		fbL.setBackgroundResource(R.drawable.fondo_menu);
 		
-		
+		//Drawable d= Imagenes.recuperaImagen("");
 		imgMiniPelota = (android.widget.Button) findViewById(R.id.pelota_mini);
 		animationPelota = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.efecto_boton2);
 		animationPelota.setStartOffset(500);
@@ -138,6 +143,20 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 			}
 		});
 		imgMiniPelota.startAnimation(animationPelota);
+		imgMiniPelota.setId(1);
+		imgMiniPelota.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("Click en imgMiniPelota");
+				if(imgMiniPelota.getId()==1){
+					imgMiniPelota.setBackgroundResource(R.drawable.mini_madera_pelota);
+					imgMiniPelota.setId(2);
+				}else if(imgMiniPelota.getId()==2){
+					imgMiniPelota.setBackgroundResource(R.drawable.mini_piedra_pelota);
+					imgMiniPelota.setId(1);
+				}
+			}
+		});
 		
 
 		btnInicio = (android.widget.Button) findViewById(R.id.inicio);
@@ -190,12 +209,10 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		});
 
 		// Asignar fuente
-		Typeface tf = Typeface.createFromAsset(this.getAssets(),
-				"font/damnarc.ttf");
-		btnInicio.setTypeface(tf);
-		btnComoJugar.setTypeface(tf);
-		btnOpciones.setTypeface(tf);
-		btnSalir.setTypeface(tf);		
+		btnInicio.setTypeface(this.recuperarFuente());
+		btnComoJugar.setTypeface(this.recuperarFuente());
+		btnOpciones.setTypeface(this.recuperarFuente());
+		btnSalir.setTypeface(this.recuperarFuente());		
 	}
 
 	
@@ -354,6 +371,50 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		if (sv.readInt("musica") == 0)
 			configUsuario.setMusicaActivada(true);
 
+		int numPelota = imgMiniPelota.getId();
+		imgMiniPelota2 = (android.widget.Button) findViewById(R.id.pelota_mini2);
+		if(numPelota==1){
+			imgMiniPelota2.setBackgroundResource(R.drawable.mini_piedra_pelota);
+		}else if(numPelota==2){
+			imgMiniPelota2.setBackgroundResource(R.drawable.mini_madera_pelota);
+		}
+		animationPelota2 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.efecto_boton2);
+		animationPelota2.setStartOffset(100);
+		animationPelota2.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				//ejecutar nuevamente
+				imgMiniPelota2.startAnimation(animationPelota);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		imgMiniPelota2.startAnimation(animationPelota2);
+		imgMiniPelota2.setId(numPelota);
+		imgMiniPelota2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("Click en imgMiniPelota");
+				if(imgMiniPelota2.getId()==1){
+					imgMiniPelota2.setBackgroundResource(R.drawable.mini_madera_pelota);
+					imgMiniPelota2.setId(2);
+				}else if(imgMiniPelota2.getId()==2){
+					imgMiniPelota2.setBackgroundResource(R.drawable.mini_piedra_pelota);
+					imgMiniPelota2.setId(1);
+				}
+			}
+		});
+		
 		// boton sonidos
 		btnSonidos = (android.widget.Button) findViewById(R.id.btnSonidos);
 		btnSonidos.setTextSize(30);
@@ -436,13 +497,11 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		});
 
 		// Asignar fuente
-		Typeface tf = Typeface.createFromAsset(this.getAssets(),
-				"font/damnarc.ttf");
-		btnSonidos.setTypeface(tf);
-		btnMusica.setTypeface(tf);
-		btnCreditos.setTypeface(tf);
-		btnResetGame.setTypeface(tf);
-		btnVolver.setTypeface(tf);
+		btnSonidos.setTypeface(this.recuperarFuente());
+		btnMusica.setTypeface(this.recuperarFuente());
+		btnCreditos.setTypeface(this.recuperarFuente());
+		btnResetGame.setTypeface(this.recuperarFuente());
+		btnVolver.setTypeface(this.recuperarFuente());
 
 	}
 	
@@ -627,6 +686,13 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		}
 	};
 	
+	public Typeface recuperarFuente(){
+		if(tf==null){
+			tf = Typeface.createFromAsset(this.getAssets(),"font/damnarc.ttf");
+		}
+		return tf;
+	}
+	
 	public void limpiarAnimaciones() {
 		btnInicio.clearAnimation();
 		btnComoJugar.clearAnimation();
@@ -666,6 +732,16 @@ public class ActividadMenu extends Activity implements OnTouchListener {
 		btnCreditos=null;
 		btnResetGame=null;
 		fbL = null;
+		imgMiniPelota=null;
+		imgMiniPelota2=null;
+		animationPelota = null;
+		animationPelota2 = null;
+		animationVolver= null;
+		animationSonidos= null;
+		animationMusica= null;
+		animationCreditos= null;
+		animationResetGame= null;
+		sv=null;
 		System.gc();
 		System.out.println("******* Vistas Eliminadas: ActividadMenu ********");
 

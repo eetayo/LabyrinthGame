@@ -1,0 +1,6 @@
+1,5
+FINACTIVAR
+pelotaA,1,1
+pelotaB,1,2
+FIN
+RECORD,1

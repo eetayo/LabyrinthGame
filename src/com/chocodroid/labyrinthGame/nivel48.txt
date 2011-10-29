@@ -1,0 +1,17 @@
+1,8
+3,4
+9,6
+8,2
+3,7
+5,7
+7,7
+4,5
+6,5
+8,5
+9,8
+FINACTIVAR
+pelotaA,7,1
+pelotaB,7,2
+pelotaC,7,5
+FIN
+RECORD,30

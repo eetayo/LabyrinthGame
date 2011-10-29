@@ -9,12 +9,22 @@
 		android:padding="5dp"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">    
+		<Button android:id="@+id/pelota_mini2" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" 
+				android:layout_marginLeft="50dp"
+				android:layout_marginTop="10dp"
+				android:background="@drawable/mini_piedra_pelota"
+        		android:layout_alignParentTop="true"
+        		android:layout_centerInParent="true"
+       			android:textColor="#ffffff"></Button>
             <LinearLayout android:orientation="vertical"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="120dp">
+			android:paddingTop="50dp">
 				<Button android:text="@string/botonOpciones_Volver" 
-       			android:id="@+id/btnVolver" android:layout_width="wrap_content" android:layout_height="70dp" android:width="300dp"
+       			android:id="@+id/btnVolver" android:layout_width="wrap_content" 
+       			android:layout_height="70dp" android:width="300dp"
            		android:background="@drawable/botones_gr3_off"
         		android:layout_alignParentTop="true"
         		android:layout_centerInParent="true"
@@ -23,6 +33,7 @@
 				<Button android:text="@string/botonOpciones_sonidos_ON" android:id="@+id/btnSonidos"
 				android:layout_width="wrap_content" 
 				android:layout_height="70dp" android:width="300dp" 
+				android:layout_marginTop="5dp"
 				android:background="@drawable/botones_gr_off"
         		android:layout_alignParentTop="true"
         		android:layout_centerInParent="true"

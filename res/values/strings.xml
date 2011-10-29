@@ -34,5 +34,7 @@
     <!-- Partes del juego -->
      <string name="txtMarcador_numMovimientos">Movimientos : </string>
      <string name="txtMarcador_numMovimientosMinimos">Record : </string>
+     <string name="txtJuego_Mundo">Mundo:</string>
+     <string name="txtJuego_Nivel">Nivel:</string>
     
 </resources>

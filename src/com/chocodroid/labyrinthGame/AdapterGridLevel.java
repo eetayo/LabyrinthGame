@@ -25,6 +25,7 @@ import android.widget.ImageView;
 	    private int mundo;
 	    private ArrayList<Score> listaResultados;
 	    private ArrayList<String> listaNivelesBloqueados= new ArrayList();
+	    private  Typeface tfBerlin;
 
 	    public AdapterGridLevel(ActividadLevel c,ArrayList<Score> listaResultados, int mundo) {
 	        this.mundo= mundo;
@@ -58,7 +59,7 @@ import android.widget.ImageView;
 	        }
 
 	        buttonView.setBackgroundResource(mThumbIds[position]);
-	        if(!this.estaNivelBloqueado(String.valueOf(position+1))){
+	        if(!this.estaNivelBloqueado(String.valueOf(position+1)) || mContext.activarTodosLosNiveles){
 		        if(mundo==1){
 			        buttonView.setText(String.valueOf(position+1));
 					buttonView.setId(position+1);
@@ -89,13 +90,19 @@ import android.widget.ImageView;
 					}
 				});
 	        }
-	        Typeface tfBerlin = Typeface.createFromAsset(mContext.getAssets(),"font/berlin_sans_bold.ttf");
-			buttonView.setTypeface(tfBerlin);
+	       buttonView.setTypeface(this.recuperarFuenteBerlin());
 			buttonView.setTextSize(30);
 			buttonView.setTextColor(Color.WHITE);
 			
 	        return buttonView;
 	    }
+	    
+	    public Typeface recuperarFuenteBerlin(){
+			if(tfBerlin==null){
+				tfBerlin = Typeface.createFromAsset(mContext.getAssets(),"font/berlin_sans_bold.ttf");
+			}
+			return tfBerlin;
+		}
 	    
 	    
 	    public boolean estaNivelBloqueado(String nivelBloqueado){

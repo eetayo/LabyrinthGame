@@ -15,7 +15,7 @@
 				android:layout_height="wrap_content" 
 				android:layout_marginLeft="50dp"
 				android:layout_marginTop="10dp"
-				android:background="@drawable/pelota_mini_portada"
+				android:background="@drawable/mini_piedra_pelota"
         		android:layout_alignParentTop="true"
         		android:layout_centerInParent="true"
        			android:textColor="#ffffff"></Button>

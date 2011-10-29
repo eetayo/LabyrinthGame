@@ -53,6 +53,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class ActividadLevel extends Activity{
 	
+	public ActividadLevel mContext;
 	public int numero;
 	public int nivelMaximoAlacanzado;
 	public int mundoActual;
@@ -60,11 +61,18 @@ public class ActividadLevel extends Activity{
 	public ArrayList<Score>  listaResultados;
 	private SaveGame sv;
 	
+	private Typeface tf;
+	
 	public Sonidos sonidos;
 	public ConfiguracionDeUsuario configUsuario;
 	
 	public HashMap listaFramesLayOut;
 	public RealViewSwitcher realViewSwitcher;
+	
+	private ImageView tapaTransparencia;
+	private FrameLayout fly;
+	private GridView gridview;
+	private Button btnVolver;
 	
 	private int numeroEstrellasMundo1=0;
 	private int numeroEstrellasMundo2=0;
@@ -77,10 +85,14 @@ public class ActividadLevel extends Activity{
 	private boolean activadoMundo4=false;
 	private boolean activadoMundo5=false;
 	
+	public boolean activarTodosLosNiveles=true;
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		System.gc();
+		this.mContext=this;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(1);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -88,9 +100,10 @@ public class ActividadLevel extends Activity{
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		setContentView(R.layout.loading_game);
 		sv = new SaveGame(this);
+		
 		listaFramesLayOut = new HashMap();
 	  final Bundle extras = getIntent().getExtras();
-	 //ASIGNAR CONFIG
+	  //ASIGNAR CONFIG
 	        //0 activado
 	        //1 desactivado
 	        configUsuario = new ConfiguracionDeUsuario();
@@ -187,7 +200,7 @@ public class ActividadLevel extends Activity{
 					
 					
 					//BOTON MUNDO
-					Typeface tf = Typeface.createFromAsset(this.getAssets(),"font/damnarc.ttf");
+					
 					final Button btnMundo = new Button(this);
 					//Recuperar texto y ver el tema–o del texto, segun el tama–o coloar N Espacios
 					String txtEM = this.getString(R.string.botonElegirMundo);
@@ -211,7 +224,7 @@ public class ActividadLevel extends Activity{
 					FrameLayout.LayoutParams layoutParamsMundo = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
 					layoutParamsMundo.setMargins(0, (int)(70*getResources().getDisplayMetrics().density), 0, 0);
 					btnMundo.setLayoutParams(layoutParamsMundo); 
-					btnMundo.setTypeface(tf);
+					btnMundo.setTypeface(this.recuperarFuente());
 					btnMundo.setShadowLayer(3, 0, 0, Color.BLACK); 
 					btnMundo.setId(num);
 					btnMundo.setOnClickListener(new OnClickListener() {
@@ -222,6 +235,13 @@ public class ActividadLevel extends Activity{
 								(btnMundo.getId()==3 && activadoMundo3) ||
 								(btnMundo.getId()==4 && activadoMundo4) ||
 								(btnMundo.getId()==5 && activadoMundo5)){
+									//TEMPORAL
+									cargarGridNivelesDeMundo(btnMundo.getId());
+									mundoActual=btnMundo.getId();
+								 // Inicializaci—n de la actividad, layout, etc
+						        	//TareaCargarGridNiveles task = new TareaCargarGridNiveles(mContext);
+						        	//task.execute("http://blog.fr4gus.com/api/test.json");
+							}else if(activarTodosLosNiveles){
 									cargarGridNivelesDeMundo(btnMundo.getId());
 									mundoActual=btnMundo.getId();
 							}
@@ -352,14 +372,48 @@ public class ActividadLevel extends Activity{
 		return 0;
 	}
 	
+	
+	//PRUEBA
+	/*public static class TareaCargarGridNiveles extends AsyncTask<String, Void, Void> {
+		WeakReference<ActividadLevel> context;
+
+		public TareaCargarGridNiveles(ActividadLevel activity) {
+			context = new WeakReference<ActividadLevel>(activity);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// Av’sele al usuario que estamos trabajando
+		}
+
+		@Override
+		protected Void doInBackground(String... params) {
+			// Aqu’ hacemos una tarea laaarga
+			ActividadLevel activity = context.get();
+			activity.cargarGridNivelesDeMundo(1);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			ActividadLevel activity = context.get();
+			if (activity != null && !activity.isFinishing()) {
+				// Aqu’ actualizamos la UI con el resultado
+				activity.cargarGridNivelesDeMundoViews();
+
+			}
+			
+		}
+	}*/
+	
 	public void cargarGridNivelesDeMundo(int mundo){
 		//tapa transparencia
 		 
-		final ImageView tapaTransparencia = new ImageView(this);
-		tapaTransparencia.setBackgroundResource(R.drawable.fondo_pause);        
-        final FrameLayout fly = (FrameLayout)listaFramesLayOut.get(mundo); 
+		tapaTransparencia = new ImageView(this);
+		tapaTransparencia.setBackgroundDrawable(getResources().getDrawable(R.drawable.fondo_pause));        
+        fly = (FrameLayout)listaFramesLayOut.get(mundo); 
 		//Grid de iconos
-		 final GridView gridview = new GridView(this);
+		 gridview = new GridView(this);
 		 FrameLayout.LayoutParams layoutParamsGrid = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER_HORIZONTAL);
 		 layoutParamsGrid.setMargins((int)(15*getResources().getDisplayMetrics().density), (int)(150*getResources().getDisplayMetrics().density), 0, 0);
 		 gridview.setLayoutParams(layoutParamsGrid); 
@@ -369,19 +423,8 @@ public class ActividadLevel extends Activity{
 		 gridview.setVerticalSpacing((int)(20*getResources().getDisplayMetrics().density));
 		 
 		
-
-		 /*gridview.setOnItemClickListener(new OnItemClickListener() {
-			 public void onItemClick(AdapterView parent,View v, int position, long id){
-				 	System.out.println("onItemClick:ActividadLevel");
-				 	Intent i = new Intent(ActividadLevel.this, MainActivity.class);
-					i.putExtra("nivel", String.valueOf((position +1)));
-					i.putExtra("mundo", String.valueOf(mundoActual));
-					startActivity(i);
-					finish();
-			 }
-		});*/
         //boton para volver
-        final Button btnVolver = new Button(this);
+        btnVolver = new Button(this);
 		btnVolver.setText(R.string.botonOpciones_Volver);
 		btnVolver.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr3_off));
 		btnVolver.setTextSize(40);
@@ -391,8 +434,7 @@ public class ActividadLevel extends Activity{
 		FrameLayout.LayoutParams layoutParamsMundo = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
 		layoutParamsMundo.setMargins(0, (int)(70*getResources().getDisplayMetrics().density), 0, 0);
 		btnVolver.setLayoutParams(layoutParamsMundo); 
-		Typeface tf = Typeface.createFromAsset(this.getAssets(),"font/damnarc.ttf");
-		btnVolver.setTypeface(tf);
+		btnVolver.setTypeface(this.recuperarFuente());
 		btnVolver.setShadowLayer(3, 0, 0, Color.BLACK); 
 		btnVolver.setOnClickListener(new OnClickListener() {
 			@Override
@@ -412,6 +454,18 @@ public class ActividadLevel extends Activity{
 		
 		realViewSwitcher.setSistemaMovimientoActivado(false);
 	}
+	
+	/*public void cargarGridNivelesDeMundoViews(){
+
+        fly.addView(tapaTransparencia);
+		fly.addView(btnVolver); 
+		fly.addView(gridview);
+		
+		realViewSwitcher.setSistemaMovimientoActivado(false);
+		
+	}*/
+	
+	
 	
 	private void cargarResultados() {
 		// TODO Auto-generated method stub
@@ -440,6 +494,7 @@ public class ActividadLevel extends Activity{
 		
 		
 	}
+	
 	
 	public void cargarDatosNiveles(String nombreFichero){
 		InputStream is = this.getClass().getResourceAsStream(nombreFichero);
@@ -519,6 +574,14 @@ public class ActividadLevel extends Activity{
 		}
 	} // readFile
 	
+	
+	public Typeface recuperarFuente(){
+		if(tf==null){
+			tf = Typeface.createFromAsset(this.getAssets(),"font/damnarc.ttf");
+		}
+		return tf;
+	}
+	
 	private final RealViewSwitcher.OnScreenSwitchListener onScreenSwitchListener = new RealViewSwitcher.OnScreenSwitchListener() {
 		
 		@Override
@@ -576,17 +639,20 @@ public class ActividadLevel extends Activity{
 		        }
 		        ((ViewGroup) view).removeAllViews();
 		    }
-		}
+	}
 	 
 	 public void cambiarAJuego(int nivel){
 		 setContentView(R.layout.loading_game);
-		 System.out.println("Nivel:"+nivel + "   Mundo:"+mundoActual);
+		 this.liberarMemoria();
+		 //System.out.println("Nivel:"+nivel + "   Mundo:"+mundoActual);
 		 Intent i = new Intent(ActividadLevel.this, MainActivity.class);
 		 i.putExtra("nivel", String.valueOf(nivel));
 		 i.putExtra("mundo", String.valueOf(mundoActual));
 		 startActivity(i);
-		 sv.cerrarBD();
-		 this.liberarMemoria();
+		 if(sv!=null){
+			 sv.cerrarBD();
+			 sv=null;
+		 }
 		 finish();
 	 }
 }
