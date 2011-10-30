@@ -21,7 +21,8 @@ import android.widget.ImageView;
 
 	public class AdapterGridLevel extends BaseAdapter {
 	    private ActividadLevel mContext;
-	    private Integer[] mThumbIds=new Integer[20];
+	    //private Integer[] mThumbIds=new Integer[20];
+	    private Drawable[] mThumbIds=new Drawable[20];
 	    private int mundo;
 	    private ArrayList<Score> listaResultados;
 	    private ArrayList<String> listaNivelesBloqueados= new ArrayList();
@@ -29,9 +30,9 @@ import android.widget.ImageView;
 
 	    public AdapterGridLevel(ActividadLevel c,ArrayList<Score> listaResultados, int mundo) {
 	        this.mundo= mundo;
+	        mContext = c;
 	        this.listaResultados = listaResultados;
 	    	this.cargarImagenes();
-	        mContext = c;
 	    }
 
 	    public int getCount() {
@@ -58,22 +59,23 @@ import android.widget.ImageView;
 	        	buttonView = (Button) convertView;
 	        }
 
-	        buttonView.setBackgroundResource(mThumbIds[position]);
+	        //buttonView.setBackgroundResource(mThumbIds[position]);
+	        buttonView.setBackgroundDrawable(mThumbIds[position]);
 	        if(!this.estaNivelBloqueado(String.valueOf(position+1)) || mContext.activarTodosLosNiveles){
 		        if(mundo==1){
 			        buttonView.setText(String.valueOf(position+1));
 					buttonView.setId(position+1);
 		        }else if(mundo==2){
-			        buttonView.setText(String.valueOf(position+1+20));
+			        buttonView.setText(String.valueOf(position+21));
 			        buttonView.setId(position+21);
 		        }else if(mundo==3){
-		        	buttonView.setText(String.valueOf(position+1+40));
+		        	buttonView.setText(String.valueOf(position+41));
 		        	buttonView.setId(position+41);
 		        }else if(mundo==4){
-		        	buttonView.setText(String.valueOf(position+1+60));
+		        	buttonView.setText(String.valueOf(position+61));
 		        	buttonView.setId(position+61);
 		        }else if(mundo==5){
-		        	buttonView.setText(String.valueOf(position+1+80));
+		        	buttonView.setText(String.valueOf(position+81));
 		        	buttonView.setId(position+81);
 		        }
 		        
@@ -127,53 +129,73 @@ import android.widget.ImageView;
 		    		if(mundo==1 && Integer.parseInt(s.getLevel())<21){
 		    			//comprobar el numero de movimientos y poner una u otra imagen dependiendo del resultado
 		    			if(s.devolverNumeroEstrellas()==0){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel0estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel0estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==1){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel1estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel1estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel1estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==2){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel2estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel2estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel2estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==3){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel3estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-1] = R.drawable.boton_nivel3estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-1] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel3estrellas");
 		    			}			    		
 		    		}else if(mundo==2 && Integer.parseInt(s.getLevel())>20 && Integer.parseInt(s.getLevel())<41){
 		    			if(s.devolverNumeroEstrellas()==0){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-21] = R.drawable.boton_nivel0estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-21] = R.drawable.boton_nivel0estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-21] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==1){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-21] = R.drawable.boton_nivel1estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-21] = R.drawable.boton_nivel1estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-21] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel1estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==2){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-21] = R.drawable.boton_nivel2estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-21] = R.drawable.boton_nivel2estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-21] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel2estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==3){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-21] = R.drawable.boton_nivel3estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-21] = R.drawable.boton_nivel3estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-21] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel3estrellas");
 		    			}
 		    		}else if(mundo==3 && Integer.parseInt(s.getLevel())>40 && Integer.parseInt(s.getLevel())<61){
 		    			if(s.devolverNumeroEstrellas()==0){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-41] = R.drawable.boton_nivel0estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-41] = R.drawable.boton_nivel0estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-41] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==1){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-41] = R.drawable.boton_nivel1estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-41] = R.drawable.boton_nivel1estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-41] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel1estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==2){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-41] = R.drawable.boton_nivel2estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-41] = R.drawable.boton_nivel2estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-41] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel2estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==3){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-41] = R.drawable.boton_nivel3estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-41] = R.drawable.boton_nivel3estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-41] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel3estrellas");
 		    			}
 		    		}else if(mundo==4 && Integer.parseInt(s.getLevel())>60 && Integer.parseInt(s.getLevel())<81){
 		    			if(s.devolverNumeroEstrellas()==0){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-61] = R.drawable.boton_nivel0estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-61] = R.drawable.boton_nivel0estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-61] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==1){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-61] = R.drawable.boton_nivel1estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-61] = R.drawable.boton_nivel1estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-61] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel1estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==2){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-61] = R.drawable.boton_nivel2estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-61] = R.drawable.boton_nivel2estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-61] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel2estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==3){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-61] = R.drawable.boton_nivel3estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-61] = R.drawable.boton_nivel3estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-61] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel3estrellas");
 		    			}
 		    		}else if(mundo==5 && Integer.parseInt(s.getLevel())>80 && Integer.parseInt(s.getLevel())<101){
 		    			if(s.devolverNumeroEstrellas()==0){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-81] = R.drawable.boton_nivel0estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-81] = R.drawable.boton_nivel0estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-81] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==1){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-81] = R.drawable.boton_nivel1estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-81] = R.drawable.boton_nivel1estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-81] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel1estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==2){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-81] = R.drawable.boton_nivel2estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-81] = R.drawable.boton_nivel2estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-81] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel2estrellas");
 		    			}else if(s.devolverNumeroEstrellas()==3){
-		    				mThumbIds[Integer.valueOf(s.getLevel())-81] = R.drawable.boton_nivel3estrellas;
+		    				//mThumbIds[Integer.valueOf(s.getLevel())-81] = R.drawable.boton_nivel3estrellas;
+		    				mThumbIds[Integer.valueOf(s.getLevel())-81] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel3estrellas");
 		    			}
 		    		}
 		    	}
@@ -184,19 +206,26 @@ import android.widget.ImageView;
 	    	for(int i=0;i<mThumbIds.length;i++){
 	    		if(mThumbIds[i]==null){
 	    			if((ultimoNivelAlcanzado-((mundo-1)*20))==i && ultimoNivelAlcanzado!=0){
-	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				//mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				mThumbIds[i] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 	    			}else if(mundo==1 && i==0){
-	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				//mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				mThumbIds[i] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 	    			}else if(mundo==2 && i==0){
-	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				//mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				mThumbIds[i] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 	    			}else if(mundo==3 && i==0){
-	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				//mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				mThumbIds[i] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 	    			}else if(mundo==4 && i==0){
-	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				//mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				mThumbIds[i] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 	    			}else if(mundo==5 && i==0){
-	    				mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				//mThumbIds[i] = R.drawable.boton_nivel0estrellas;
+	    				mThumbIds[i] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel0estrellas");
 	    			}else{
-	    				mThumbIds[i] = R.drawable.boton_nivel_bloqueado_estrellas;
+	    				//mThumbIds[i] = R.drawable.boton_nivel_bloqueado_estrellas;
+	    				mThumbIds[i] = Imagenes.getAssetImage(mContext.getApplicationContext(), "boton_nivel_bloqueado_estrellas");
 	    				listaNivelesBloqueados.add(String.valueOf(i+1));
 	    			}
 	    		}

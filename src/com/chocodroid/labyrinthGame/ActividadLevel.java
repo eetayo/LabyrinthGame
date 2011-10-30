@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -196,7 +197,7 @@ public class ActividadLevel extends Activity{
 				for (int num = 1; num <= Constantes.NUMERO_MUNDOS; num++) {
 					FrameLayout fly = new FrameLayout(this); 
 					//CARGAR FONDO
-					fly.setBackgroundResource(this.cargarFondoSegunMundo(num));
+					fly.setBackgroundDrawable(this.cargarFondoSegunMundo(num));
 					
 					
 					//BOTON MUNDO
@@ -206,15 +207,20 @@ public class ActividadLevel extends Activity{
 					String txtEM = this.getString(R.string.botonElegirMundo);
 					btnMundo.setText(txtEM + "   ");
 					if(num==1){
-						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr4_off));
+						//btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr4_off));
+						btnMundo.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "botones_gr4_off"));
 					}else if(num==2){
-						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr5_off));
+						//btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr5_off));
+						btnMundo.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "botones_gr5_off"));
 					}else if(num==3){
-						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr2_off));
+						//btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr2_off));
+						btnMundo.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "botones_gr2_off"));
 					}else if(num==4){
-						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr_off));
+						//btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr_off));
+						btnMundo.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "botones_gr_off"));
 					}else if(num==5){
-						btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr3_off));
+						//btnMundo.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr3_off));
+						btnMundo.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "botones_gr3_off"));
 					}
 					
 					btnMundo.setTextSize(40);
@@ -252,15 +258,20 @@ public class ActividadLevel extends Activity{
 					//IMAGEN DEL NUMERO DE MUNDO
 					ImageView numero = new ImageView(this);
 					if(num==1){
-						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_1);
+						//numero.setBackgroundResource(R.drawable.elegir_mundo_numero_1);
+						numero.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "elegir_mundo_numero_1"));
 					}else if(num==2){
-						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_2);
+						//numero.setBackgroundResource(R.drawable.elegir_mundo_numero_2);
+						numero.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "elegir_mundo_numero_2"));
 					}else if(num==3){
-						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_3);
+						//numero.setBackgroundResource(R.drawable.elegir_mundo_numero_3);
+						numero.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "elegir_mundo_numero_3"));
 					}else if(num==4){
-						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_4);
+						//numero.setBackgroundResource(R.drawable.elegir_mundo_numero_4);
+						numero.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "elegir_mundo_numero_4"));
 					}else if(num==5){
-						numero.setBackgroundResource(R.drawable.elegir_mundo_numero_5);
+						//numero.setBackgroundResource(R.drawable.elegir_mundo_numero_5);
+						numero.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "elegir_mundo_numero_5"));
 					}
 					
 			        FrameLayout.LayoutParams layoutParamsNumero = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, AbsoluteLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
@@ -275,9 +286,10 @@ public class ActividadLevel extends Activity{
 							(num==3 && activadoMundo3) ||
 							(num==4 && activadoMundo4) ||
 							(num==5 && activadoMundo5)){
-							ventana.setBackgroundResource(this.cargarVentanaSegunMundo(num));
+							ventana.setBackgroundDrawable(this.cargarVentanaSegunMundo(num));
 					}else{
-						ventana.setBackgroundResource(R.drawable.elegir_mundo_numero_ventana_cerrada);
+						//ventana.setBackgroundResource(R.drawable.elegir_mundo_numero_ventana_cerrada);
+						ventana.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "elegir_mundo_numero_ventana_cerrada"));
 					}
 					
 			        FrameLayout.LayoutParams layoutParamsFondoCabecera = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, AbsoluteLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
@@ -290,15 +302,20 @@ public class ActividadLevel extends Activity{
 			        //CARGAR VENTANA
 			        Button contenedorNumeroEstrellas = new Button(this);
 					if(num==1){
-						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_amarilla_on);
+						//contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_amarilla_on);
+						contenedorNumeroEstrellas.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "boton_estrellas_amarilla_on"));
 					}else if(num==2){
-						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_verde_on);
+						//contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_verde_on);
+						contenedorNumeroEstrellas.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "boton_estrellas_verde_on"));
 					}else if(num==3){
-						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_negro_on);
+						//contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_negro_on);
+						contenedorNumeroEstrellas.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "boton_estrellas_negro_on"));
 					}else if(num==4){
-						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_azul_on);
+						//contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_azul_on);
+						contenedorNumeroEstrellas.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "boton_estrellas_azul_on"));
 					}else if(num==5){
-						contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_rojo_on);
+						//contenedorNumeroEstrellas.setBackgroundResource(R.drawable.boton_estrellas_rojo_on);
+						contenedorNumeroEstrellas.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "boton_estrellas_rojo_on"));
 					}
 					Typeface tfBerlin = Typeface.createFromAsset(this.getAssets(),"font/berlin_sans_bold.ttf");
 					FrameLayout.LayoutParams layoutParamsContenedorNumeroEstrellas = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, AbsoluteLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
@@ -342,34 +359,44 @@ public class ActividadLevel extends Activity{
 		
 	}
 	
-	public int cargarFondoSegunMundo(int mundo){
+	public Drawable cargarFondoSegunMundo(int mundo){
 		if(mundo==1){
-			return R.drawable.mundos01;
+			//return R.drawable.mundos01;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundos01");
 		}else if(mundo==2){
-			return R.drawable.mundos02;
+			//return R.drawable.mundos02;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundos02");
 		}else if(mundo==3){
-			return R.drawable.mundos03;
+			//return R.drawable.mundos03;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundos03");
 		}else if(mundo==4){
-			return R.drawable.mundos04;
+			//return R.drawable.mundos04;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundos04");
 		}else if(mundo==5){
-			return R.drawable.mundos05;
+			//return R.drawable.mundos05;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundos05");
 		}
-		return 0;
+		return null;
 	}
 	
-	public int cargarVentanaSegunMundo(int mundo){
+	public Drawable cargarVentanaSegunMundo(int mundo){
 		if(mundo==1){
-			return R.drawable.mundo1;
+			//return R.drawable.mundo1;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundo1");
 		}else if(mundo==2){
-			return R.drawable.mundo2;
+			//return R.drawable.mundo2;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundo2");
 		}else if(mundo==3){
-			return R.drawable.mundo3;
+			//return R.drawable.mundo3;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundo3");
 		}else if(mundo==4){
-			return R.drawable.mundo4;
+			//return R.drawable.mundo4;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundo4");
 		}else if(mundo==5){
-			return R.drawable.mundo5;
+			//return R.drawable.mundo5;
+			return Imagenes.getAssetImage(getApplicationContext(), "mundo5");
 		}
-		return 0;
+		return null;
 	}
 	
 	
@@ -410,7 +437,8 @@ public class ActividadLevel extends Activity{
 		//tapa transparencia
 		 
 		tapaTransparencia = new ImageView(this);
-		tapaTransparencia.setBackgroundDrawable(getResources().getDrawable(R.drawable.fondo_pause));        
+		//tapaTransparencia.setBackgroundDrawable(getResources().getDrawable(R.drawable.fondo_pause));      
+		tapaTransparencia.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "fondo_pause"));      
         fly = (FrameLayout)listaFramesLayOut.get(mundo); 
 		//Grid de iconos
 		 gridview = new GridView(this);
@@ -426,7 +454,8 @@ public class ActividadLevel extends Activity{
         //boton para volver
         btnVolver = new Button(this);
 		btnVolver.setText(R.string.botonOpciones_Volver);
-		btnVolver.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr3_off));
+		//btnVolver.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.botones_gr3_off));
+		btnVolver.setBackgroundDrawable(Imagenes.getAssetImage(getApplicationContext(), "botones_gr3_off"));
 		btnVolver.setTextSize(40);
 		btnVolver.setGravity(Gravity.CENTER);
 		btnVolver.setWidth((int)(250*this.getResources().getDisplayMetrics().density));

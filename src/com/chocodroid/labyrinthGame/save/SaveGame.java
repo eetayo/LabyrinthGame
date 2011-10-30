@@ -17,11 +17,11 @@ public class SaveGame
 	public SaveGame(Context context)
 	{
 		if(mHelper!=null){
-			mHelper.close();
+			//mHelper.close();
 			mHelper=null;
 		}
 		if(mDB!=null){
-			mDB.close();
+			//mDB.close();
 			mDB=null;
 		}
 		

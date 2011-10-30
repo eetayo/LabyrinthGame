@@ -1196,10 +1196,13 @@ public class MainActivity extends Activity implements OnTouchListener,
 			hyperspaceJumpAnimation
 					.setAnimationListener(new AnimationListener() {
 						public void onAnimationEnd(Animation animation) {
-							sonidos.pararMusicaJuego();
 							sonidos.ejecutarPulsacionBoton();
-							// cambiar de actividad
+							setContentView(R.layout.loading_game);
+							limpiarMemoria();
+							Intent i = new Intent(MainActivity.this,ActividadLevel.class);
+							startActivity(i);
 							finish();
+
 						}
 
 						@Override
