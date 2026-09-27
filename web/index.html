@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Logic Labyrinth</title>
+  <link rel="icon" href="../res/drawable-hdpi/icon.png">
+  <link rel="stylesheet" href="css/game.css?v=14">
+</head>
+<body>
+  <div id="scaler">
+    <div id="phone">
+      <button id="logo-ball" type="button" aria-label="Cambiar pelota">
+        <img id="logo-ball-img" src="../res/drawable-hdpi/madera_pelota.png" alt="">
+      </button>
+
+      <section id="screen-loading" class="screen active">
+        <img class="fill" src="../res/drawable-hdpi/fondo_menu.png" alt="">
+        <div class="menu-stack below-logo">
+          <p id="loading-text" class="loading-text">Cargando niveles…</p>
+        </div>
+      </section>
+
+      <section id="screen-menu" class="screen">
+        <img class="fill" src="../res/drawable-hdpi/fondo_menu.png" alt="">
+        <div class="menu-stack below-logo">
+          <button class="btn" data-action="play">Jugar</button>
+          <button class="btn" data-action="help">Cómo jugar</button>
+          <button class="btn" data-action="options">Opciones</button>
+        </div>
+      </section>
+
+      <section id="screen-help" class="screen">
+        <img class="fill" src="../res/drawable-hdpi/fondo_menu.png" alt="">
+        <div class="menu-stack help-stack">
+          <h1>Cómo jugar</h1>
+          <p>Toca un lado del tablero, desliza o usa las flechas. Todas las bolas se mueven juntas en esa dirección.</p>
+          <p>Se detienen al chocar con una pared o con otra bola.</p>
+          <p>Lleva una bola hasta el agujero. Cuantos menos movimientos, más estrellas.</p>
+          <button class="btn" data-action="tutorial">Probar el tutorial</button>
+          <button class="btn btn-ghost" data-action="menu">Volver</button>
+        </div>
+      </section>
+
+      <section id="screen-options" class="screen">
+        <img class="fill" src="../res/drawable-hdpi/fondo_menu.png" alt="">
+        <div class="menu-stack below-logo">
+          <h1>Opciones</h1>
+          <button class="btn" id="opt-sound" data-action="toggle-sound">Sonido: ON</button>
+          <button class="btn" id="opt-music" data-action="toggle-music">Música: ON</button>
+          <button class="btn" id="opt-help" data-action="toggle-help">Ayuda: ON</button>
+          <button class="btn" data-action="reset">Borrar progreso</button>
+          <button class="btn btn-ghost" data-action="menu">Volver</button>
+        </div>
+      </section>
+
+      <section id="screen-worlds" class="screen">
+        <img class="fill" src="../res/drawable-hdpi/fondo_menu.png" alt="">
+        <div class="worlds-body">
+          <button class="text-btn worlds-back" data-action="menu">Menú</button>
+          <div id="world-list" class="world-list"></div>
+        </div>
+      </section>
+
+      <section id="screen-levels" class="screen">
+        <div id="world-viewport">
+          <div id="world-track"></div>
+        </div>
+        <header class="topbar topbar-dark world-hud">
+          <button class="text-btn" data-action="menu">Menú</button>
+          <div>
+            <h1 id="levels-title">Madera</h1>
+            <p id="levels-stars" class="sub"></p>
+          </div>
+        </header>
+        <div id="world-dots"></div>
+      </section>
+
+      <section id="screen-play" class="screen">
+        <img id="play-bg" class="fill" alt="">
+        <img id="play-frame" class="frame" alt="">
+        <div id="pieces"></div>
+        <img id="play-help" class="help-arrows" src="../res/drawable-hdpi/pulsadores_version3.png" alt="">
+        <img id="play-header" class="header-bar" src="../res/drawable-hdpi/cabecera_juego_fondo.png" alt="">
+        <button id="btn-pause" class="hud-btn" style="left:15px;top:19px" data-action="pause" aria-label="Pausa"></button>
+        <button id="btn-restart" class="hud-btn" style="left:83px;top:19px" data-action="restart" aria-label="Reiniciar"></button>
+        <button id="btn-exit" class="hud-btn" style="left:405px;top:19px" data-action="exit-level" aria-label="Salir"></button>
+        <div id="move-label" class="move-label"></div>
+        <div id="record-label" class="record-label"></div>
+        <div id="level-banner"></div>
+        <div id="touch"></div>
+        <div id="overlay" class="overlay hidden"></div>
+      </section>
+    </div>
+  </div>
+  <script src="js/engine.js?v=13"></script>
+  <script src="js/app.js?v=15"></script>
+</body>
+</html>
